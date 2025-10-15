@@ -380,7 +380,7 @@ function App() {
       </header>
 
       <Container className="mb-4">
-        <SearchBar />
+          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
         {/* {loading && <Spinner ... />} */}
         {/* {error && <Alert ...>{error}</Alert>} */}
