@@ -384,7 +384,6 @@ function App() {
 
         {/* {loading && <Spinner ... />} */}
         {/* {error && <Alert ...>{error}</Alert>} */}
-        {/* <UserList users={filteredUsers} onUserClick={handleUserClick} /> */}
 
           {loading && (
               <div className="text-center my-5">
@@ -402,6 +401,8 @@ function App() {
                   {error}
               </Alert>
           )}
+           <UserList users={filteredUsers} onUserClick={handleUserClick} />
+
 
 
           <UserModal
