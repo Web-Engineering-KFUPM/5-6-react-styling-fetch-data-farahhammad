@@ -332,16 +332,43 @@ function App() {
     const [showModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
-  useEffect(() => {
-    {/*API fetch logic*/}
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setLoading(true)
+                const response = await fetch('https://jsonplaceholder.typicode.com/users')
+                const data = await response.json()
+                setUsers(data)
+                setFilteredUsers(data)
+            } catch (err) {
+                setError(err.message)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchUsers()
+    }, [])
 
-  }, [])
+    useEffect(() => {
+        if (searchTerm === '') {
+            setFilteredUsers(users)
+        } else {
+            const filtered = users.filter(user =>
+                user.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            setFilteredUsers(filtered)
+        }
+    }, [searchTerm, users])
 
-  const handleUserClick = (user) => {
-  }
+    const handleUserClick = (user) => {
+        setSelectedUser(user)
+        setShowModal(true)
+    }
 
-  const handleCloseModal = () => {
-  }
+    const handleCloseModal = () => {
+        setShowModal(false)
+        setSelectedUser(null)
+    }
 
   return (
     <div className="app">
@@ -359,7 +386,29 @@ function App() {
         {/* {error && <Alert ...>{error}</Alert>} */}
         {/* <UserList users={filteredUsers} onUserClick={handleUserClick} /> */}
 
-        <UserModal />
+          {loading && (
+              <div className="text-center my-5">
+                  <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+              </div>
+          )}
+          {/* ADDED: Displays loading spinner during API fetch */}
+          {/* Only visible when loading === true */}
+
+          {error && (
+              <Alert variant="danger">
+                  <Alert.Heading>Error Loading Users</Alert.Heading>
+                  {error}
+              </Alert>
+          )}
+
+
+          <UserModal
+              show={showModal}
+              user={selectedUser}
+              onHide={handleCloseModal}
+          />
       </Container>
 
       <footer className="bg-light py-4 mt-5">
